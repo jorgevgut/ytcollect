@@ -46,4 +46,24 @@ public class GithubClient {
         }
     }
 
+    public String getRepositoriesByLanguageAndDate(String language, String date) {
+        GetRepositoriesParams params = GetRepositoriesParams.create();
+        // TODO: validate query sintax, use regex
+        params.setQuery(String.format("created:%s size:>0 language:%s",
+                    date,
+                    language));
+        Request request = new Request.Builder()
+            .url(Url.SEARCH_REPOS + params.toString())
+            .get()
+            .build();
+        Response response;
+        try {
+            response = this.client.newCall(request).execute();
+            return response.body().string();
+        } catch(IOException ioe) { 
+            return String.format( "{\"error\":\"%s\"}", ioe.toString());
+        }
+    }
+
+
 }
